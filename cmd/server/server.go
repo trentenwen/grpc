@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	pb "github.com/trentenwen/grpc/proto/currency"
+	pb "github.com/trentenwen/grpc/protos/currency"
 
 	"github.com/hashicorp/go-hclog"
 )
@@ -18,7 +18,7 @@ func NewCurrency(l hclog.Logger) *Currency {
 }
 
 func (c *Currency) GetRate(ctx context.Context, rr *pb.RateRequest) (*pb.RateResponse, error) {
-	c.log.Info("Handle GetRate", "Base", rr.GetBase(), "destination", rr.GetDestination())
+	c.log.Info("Handle GetRate", "Base", rr.GetBase(), "Dest", rr.GetDestination())
 
 	return &pb.RateResponse{Rate: 0.5}, nil
 }

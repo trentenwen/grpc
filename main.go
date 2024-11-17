@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"net"
+	"os"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/trentenwen/grpc/cmd/server"
-	pb "github.com/trentenwen/grpc/proto/addressbook"
-	protos "github.com/trentenwen/grpc/proto/currency"
+	pb "github.com/trentenwen/grpc/protos/addressbook"
+	protos "github.com/trentenwen/grpc/protos/currency"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -47,5 +50,15 @@ func main() {
 	grpcServer := grpc.NewServer()
 	currencyServer := server.NewCurrency(log)
 
+	reflection.Register(grpcServer)
+
 	protos.RegisterCurrencyServer(grpcServer, currencyServer)
+
+	l, err := net.Listen("tcp", ":9092")
+	if err != nil {
+		log.Error("Unable to listen", "error", err)
+		os.Exit(1)
+	}
+
+	grpcServer.Serve(l)
 }
